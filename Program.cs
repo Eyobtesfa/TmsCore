@@ -1,4 +1,6 @@
-﻿string? region = null;
+﻿using System.ComponentModel.Design;
+
+string? region = null;
 
 //Null-conditional operator '?.' skips calling ToUpper() if region is null, preventing a NullReferenceException.
 string? upperRegion = region?.ToUpper();
@@ -103,7 +105,7 @@ catch (ArgumentOutOfRangeException ex)
 }
 
 
-//===============================================
+//==============================================
 //EXERCISE 3B: Interface Contact Wiring
 //==============================================
 
@@ -122,3 +124,104 @@ IGradable[] assess = [
     new LabAssignment { Title = "Lab 1", FunctionalityScore = 90m, CodeQualityScore = 85m }
 ];
 PrintGradeReport(assess);
+
+
+//===============================================
+//EXERCISE 4: Enrollment Service Testing
+//===============================================
+
+var service = new EnrollmentService();
+// Test 1: Valid enrollment
+var validStudent = new Student
+{
+    Id = "S1",
+    Name = "Alice",
+    Age = 20,
+    GPA = 3.5m
+};
+var validCourse = new Course
+{
+    Code = "CS-401",
+    Title = "Advanced Programming",
+    Capacity = 30,
+};
+var result = service.ProcessRegistration(validStudent, validCourse);
+Console.WriteLine($"Enrolled: {result.StudentId} in {result.CourseCode} at {result.EnrolledAt:yyyy-MM-dd HH:mm:ss}");
+//Test 2: Null student
+try
+{
+    service.ProcessRegistration(null, validCourse);
+}
+catch (ArgumentNullException ex)
+{
+    Console.WriteLine($"Error: {ex.Message}");
+}
+//Test 3: Full course
+var fullCourse = new Course
+{
+    Code = "CS-402",
+    Title = "Data Structures",
+    Capacity = 30,
+};
+fullCourse.EnrolledCount = 30; // Simulate a full course
+try
+{
+    service.ProcessRegistration(validStudent, fullCourse);
+}
+catch (InvalidOperationException ex)
+{
+    Console.WriteLine($"Error: {ex.Message}");
+}
+
+//=============================================
+//EXERCISE 5: The Analytics Dashboard
+//=============================================
+
+List<Student> students = [
+    new Student { Id = "S1", Name = "Abeba", Age = 22, GPA = 3.8m },
+    new Student { Id = "S2", Name = "Kidane", Age = 19, GPA = 2.4m },
+    new Student { Id = "S3", Name = "Dawit", Age = 20, GPA = 3.1m },
+    new Student { Id = "S4", Name = "Sara", Age = 23, GPA = 3.9m },
+    new Student { Id = "S5", Name = "Mariam", Age = 21, GPA = 2.0m },
+    new Student { Id = "S6", Name = "Yohannes", Age = 24, GPA = 3.2m },
+    new Student { Id = "S7", Name = "Lily", Age = 18, GPA = 3.0m },
+    new Student { Id = "S8", Name = "Elias", Age = 22, GPA = 2.8m },
+];
+
+var leaderBoard = students
+    .Where(s => s.GPA >= 3.5m)
+    .OrderByDescending(s => s.GPA)
+    .Select(s => s.Name)
+    .ToList();
+
+Console.WriteLine($"fOUND {leaderBoard.Count} HONORS STUDENTS:");
+foreach (var name in leaderBoard)
+{
+    Console.WriteLine(name);
+}
+
+decimal averageGPA = students.Average(s => s.GPA);
+Console.WriteLine($"Average GPA: {averageGPA:F2}");
+
+var standingGroup = students.GroupBy(s => s.GPA switch
+{
+    >= 3.5m => "Honors",
+    >= 2.5m => "Good Standing",
+    < 2.5m => "Academic Warning"
+});
+
+Console.WriteLine("\nStudent Standing Groups:");
+foreach (var group in standingGroup)
+{
+    Console.WriteLine($"\n{group.Key}({group.Count()}):");
+    foreach (var s in group)
+    {
+        Console.WriteLine($"  - {s.Name} GPA: {s.GPA}");
+    }
+}
+
+string[] backendCourses = ["C#", "Java", "Python", "Go"];
+string[] frontendCourses = ["JavaScript", "TypeScript", "React", "Angular"];
+string[] fullstackCourses = [.. backendCourses, .. frontendCourses, "Capstone"];
+
+Console.WriteLine($"\nFullstack Curriculum: {string.Join(", ", fullstackCourses)}");
