@@ -103,3 +103,22 @@ catch (ArgumentOutOfRangeException ex)
 }
 
 
+//===============================================
+//EXERCISE 3B: Interface Contact Wiring
+//==============================================
+
+void PrintGradeReport(IEnumerable<IGradable> assessments)
+{
+    Console.WriteLine("\nGrade Report:");
+    foreach (var assessment in assessments)
+    {
+        Console.WriteLine($"{assessment.Title}: {assessment.CalculateGrade():F2}%");
+    }
+}
+
+//Test Array if if can hold two different types
+IGradable[] assess = [
+    new Quiz { Title = "Quiz 1", CorrectAnswers = 85, TotalQuestions = 100 },
+    new LabAssignment { Title = "Lab 1", FunctionalityScore = 90m, CodeQualityScore = 85m }
+];
+PrintGradeReport(assess);
