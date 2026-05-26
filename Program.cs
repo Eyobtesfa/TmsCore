@@ -47,3 +47,59 @@ decimal totalAllocationDecimal = grantPerStudentDecimal * 100_000m;
 
 Console.WriteLine($"Total Allocation(decimal): {totalAllocationDecimal}");
 Console.WriteLine($"Total Allocation(formatted): {totalAllocationDecimal:F2}");//F2 formats the decimal to 2 decimal places
+
+
+//===============================================
+//EXERCISE 3: Pipeline Data Corruption and Validation
+//===============================================
+
+var enrollment = new EnrollmentRecord("STU-001", "CS101", DateTime.UtcNow);
+var correctedEnrollment = enrollment with { CourseCode = "CS102" };//Using 'with' expression to create a new record with modified CourseCode
+Console.WriteLine($"Enrollment Record: {enrollment}");
+Console.WriteLine($"Corrected Enrollment Record: {correctedEnrollment}");
+Console.WriteLine($"SameData?{enrollment == correctedEnrollment}");//Comparing the original and corrected records for equality
+
+var course = new Course
+{
+    Code = "CS101",
+    Title = "Introduction to Computer Science",
+    Capacity = 30,
+    EnrolledCount = 25
+};
+
+Console.WriteLine($"Course: {course.Code} - {course.Title}, Capacity: {course.Capacity}, Enrolled: {course.EnrolledCount}");
+
+try
+{
+    course.Title = "";//This will throw an exception due to the validation logic in the setter
+}
+catch (ArgumentException ex)
+{
+    Console.WriteLine($"Error updating course title: {ex.Message}");
+}
+
+try
+{
+    course.Capacity = -5;//This will throw an exception due to the validation logic in the setter
+}
+catch (ArgumentOutOfRangeException ex)
+{
+    Console.WriteLine($"Error updating course capacity: {ex.Message}");
+}
+
+try
+{
+    var student2 = new Student
+    {
+        Id = "STU-002",
+        Name = "Kebede",
+        Age = 120,
+        GPA = 3.5m
+    };
+}
+catch (ArgumentOutOfRangeException ex)
+{
+    Console.WriteLine($"Error creating student: {ex.Message}");
+}
+
+
