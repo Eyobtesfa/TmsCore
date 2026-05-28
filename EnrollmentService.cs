@@ -3,17 +3,17 @@ public class EnrollmentService
     public EnrollmentRecord ProcessRegistration(Student? student, Course? course)
     {
         //Guard clauses to validate input parameters and ensure business rules are met before processing the enrollment
-        if (student == null)
+        if (student is null)
         {
             throw new ArgumentNullException(nameof(student), "Student cannot be null.");
         }
-        if (course == null)
+        if (course is null)
         {
             throw new ArgumentNullException(nameof(course), "Course cannot be null.");
         }
         if (course.EnrolledCount >= course.Capacity)
         {
-            throw new InvalidOperationException("Course is at full capacity.");
+            throw new CapacityReachedException(course.Code);
         }
 
         //Switch expression to classify students academic standing

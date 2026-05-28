@@ -357,4 +357,17 @@ foreach (var student in students)
 }*/
 
 //EXERCISE 7: The Unhelpful Crash
-
+try
+{
+    var overflowCourse = new Course { Code = "CRS-999", Title = "Overflow Test", Capacity = 0 };
+    enrollService.ProcessRegistration(
+        new Student { Id = "S99", Name = "Test", Age = 20, GPA = 3.0m },
+        overflowCourse
+    );
+}
+catch (CapacityReachedException ex)
+{
+    Console.WriteLine($"\nDomain Exception Caught:");
+    Console.WriteLine($" Course:{ex.CourseCode}");
+    Console.WriteLine($" Message:{ex.Message}");
+}

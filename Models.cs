@@ -16,7 +16,7 @@ public class Course
     public int Capacity
     {
         get;
-        set => field = value > 0
+        set => field = value >= 0
         ? value
         : throw new ArgumentOutOfRangeException(nameof(value), "Capacity must be greater than zero.");
     }
